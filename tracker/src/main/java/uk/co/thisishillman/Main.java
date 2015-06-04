@@ -23,6 +23,10 @@
  */
 package uk.co.thisishillman;
 
+import java.io.File;
+import java.net.URI;
+import java.net.URISyntaxException;
+import javax.swing.JOptionPane;
 import uk.co.thisishillman.ui.MainFrame;
 
 /**
@@ -32,11 +36,35 @@ import uk.co.thisishillman.ui.MainFrame;
  */
 public class Main {
     
+    public static String EXEC_DIR;
+    
+    /** 
+      * Determines the execution directory. NetBeans runs it's jars from a 'target' sub-folder, 
+     * this method detects that & adjusts the execution directory accordingly.
+     */
+    private static void determineExecutionDirectory() {
+        try {
+            URI location = Main.class.getProtectionDomain().getCodeSource().getLocation().toURI();
+            if(new File(location).getParentFile().getName().equals("target")) {
+                Main.EXEC_DIR = new File(location).getParentFile().getParentFile().getAbsolutePath();
+                
+            } else {
+                Main.EXEC_DIR = new File(location).getParentFile().getAbsolutePath();
+            }
+            
+        } catch(URISyntaxException excep) {
+            JOptionPane.showMessageDialog(null, "Cannot determine execution directory, fatal error!", 
+                    "Fatal Error!", JOptionPane.ERROR_MESSAGE);
+            System.exit(-1);
+        }
+    }
     /**
      * 
      * @param args 
      */
     public static void main(String[] args) {
+        determineExecutionDirectory();
+                
         MainFrame mainFrame = new MainFrame();
         mainFrame.setLocationRelativeTo(null);
         mainFrame.setVisible(true);

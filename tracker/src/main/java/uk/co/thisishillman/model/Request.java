@@ -190,7 +190,7 @@ public class Request implements Callable<Boolean> {
     @Override
     public String toString() {
         String timeString = new SimpleDateFormat("MMM dd hh:mm:ss").format(time.getTime());
-        return ((approved) ? "Accepted: " : "Denied: ") + source.toString() + " at " + timeString;
+        return ((approved) ? "Accepted: " : "Denied: ") + source.toString() + " on " + timeString;
     }
 
 }

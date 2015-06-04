@@ -28,6 +28,7 @@ import com.maxmind.geoip.LookupService;
 import java.io.File;
 import java.io.IOException;
 import java.util.Objects;
+import uk.co.thisishillman.Main;
 
 /**
  * Represents a location in the world from which an IP originates
@@ -37,7 +38,7 @@ import java.util.Objects;
 public class IPLocation {
     
     // Geo IP database
-    public static final File GEO_DB = new File("D:\\Repositories\\china\\tracker\\GeoLiteCity.dat");
+    public static File GEO_DB;
     
     // IP address
     private String ip = "0.0.0.0";
@@ -57,6 +58,11 @@ public class IPLocation {
     // Longitude
     private double longitude;
     
+    // Static initialiser 
+    static {
+        GEO_DB = new File(Main.EXEC_DIR + File.separator + "GeoLiteCity.dat");
+    }
+    
     /**
      * Use the GeoIP API to determine a location for the access request
      * 
@@ -64,16 +70,102 @@ public class IPLocation {
      * @throws IOException 
      */
     public void locate(String ip) throws IOException {
-        this.ip = ip;
+        this.setIp(ip);
         
         LookupService lookup = new LookupService(GEO_DB, LookupService.GEOIP_MEMORY_CACHE);
         Location location = lookup.getLocation(ip);
-        
-        this.country   = location.countryName;
-        this.region    = location.region;
-        this.city      = location.city;
-        this.latitude  = location.latitude;
-        this.longitude = location.longitude;
+
+        if(location != null) {
+            this.setCountry(location.countryName);
+            this.setRegion(location.region);
+            this.setCity(location.city);
+            this.setLatitude(location.latitude);
+            this.setLongitude(location.longitude);
+        }
+    }
+    
+    /**
+     * @return the ip
+     */
+    public String getIp() {
+        return ip;
+    }
+
+    /**
+     * @param ip the ip to set
+     */
+    public void setIp(String ip) {
+        this.ip = ip;
+    }
+
+    /**
+     * @return the country
+     */
+    public String getCountry() {
+        return country;
+    }
+
+    /**
+     * @param country the country to set
+     */
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    /**
+     * @return the region
+     */
+    public String getRegion() {
+        return region;
+    }
+
+    /**
+     * @param region the region to set
+     */
+    public void setRegion(String region) {
+        this.region = region;
+    }
+
+    /**
+     * @return the city
+     */
+    public String getCity() {
+        return city;
+    }
+
+    /**
+     * @param city the city to set
+     */
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    /**
+     * @return the latitude
+     */
+    public double getLatitude() {
+        return latitude;
+    }
+
+    /**
+     * @param latitude the latitude to set
+     */
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    /**
+     * @return the longitude
+     */
+    public double getLongitude() {
+        return longitude;
+    }
+
+    /**
+     * @param longitude the longitude to set
+     */
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
     }
     
     /**
@@ -94,8 +186,8 @@ public class IPLocation {
         if( !this.region.equals(location.region) ) return false;
         if( !this.city.equals(location.city) ) return false;
         
-        if( this.latitude != location.latitude ) return false;
-        if( this.longitude != location.longitude ) return false;
+        if( this.getLatitude() != location.getLatitude() ) return false;
+        if( this.getLongitude() != location.getLongitude() ) return false;
         
         return true;
     }
@@ -108,15 +200,15 @@ public class IPLocation {
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 37 * hash + Objects.hashCode(this.ip);
-        hash = 37 * hash + Objects.hashCode(this.country);
-        hash = 37 * hash + Objects.hashCode(this.region);
-        hash = 37 * hash + Objects.hashCode(this.city);
+        hash = 37 * hash + Objects.hashCode(this.getIp());
+        hash = 37 * hash + Objects.hashCode(this.getCountry());
+        hash = 37 * hash + Objects.hashCode(this.getRegion());
+        hash = 37 * hash + Objects.hashCode(this.getCity());
         
-        hash = 37 * hash + (int) (Double.doubleToLongBits(this.latitude) ^ 
-                (Double.doubleToLongBits(this.latitude) >>> 32));
-        hash = 37 * hash + (int) (Double.doubleToLongBits(this.longitude) ^ 
-                (Double.doubleToLongBits(this.longitude) >>> 32));
+        hash = 37 * hash + (int) (Double.doubleToLongBits(this.getLatitude()) ^ 
+                (Double.doubleToLongBits(this.getLatitude()) >>> 32));
+        hash = 37 * hash + (int) (Double.doubleToLongBits(this.getLongitude()) ^ 
+                (Double.doubleToLongBits(this.getLongitude()) >>> 32));
         
         return hash;
     }
@@ -128,9 +220,9 @@ public class IPLocation {
      */
     @Override
     public String toString() {
-        String latStr = String.format("%.3f", latitude);
-        String longStr = String.format("%.3f", longitude);
-        return (ip + " (" + country + ", " + region + ", " + city + " - " + latStr + " by " + longStr + ")");
+        String latStr = String.format("%.3f", getLatitude());
+        String longStr = String.format("%.3f", getLongitude());
+        return (getIp() + " (" + getCountry() + ", " + getRegion() + ", " + getCity() + " - " + latStr + " by " + longStr + ")");
     }
     
 }

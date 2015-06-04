@@ -32,15 +32,20 @@ import static java.nio.file.StandardWatchEventKinds.ENTRY_MODIFY;
 import java.nio.file.WatchEvent;
 import java.nio.file.WatchKey;
 import java.nio.file.WatchService;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.swing.JTextPane;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyleContext;
+import uk.co.thisishillman.ui.MapPanel;
 
 /**
  * Reads SSH logs and build Request objects
@@ -50,7 +55,7 @@ import javax.swing.text.StyleContext;
 public class LogProcessor extends Thread {
     
     // Time out on single request process
-    public static final int TIME_OUT = 10;
+    public static final int TIME_OUT = 100;
     
     // Running flag
     public static volatile boolean RUNNING;
@@ -64,6 +69,12 @@ public class LogProcessor extends Thread {
     // Destination for text output
     private JTextPane terminal;
     
+    // Map Panel
+    private MapPanel mapPanel;
+    
+    // To sop duplicates
+    private final List<Request> requests;
+    
     /**
      * Initialise a new processor with the input log file at the data source
      * 
@@ -71,6 +82,7 @@ public class LogProcessor extends Thread {
      */
     public LogProcessor(Path logFile) {
         this.logFile = logFile;
+        this.requests = new ArrayList<>();
         
         this.setDaemon(false);
         this.setName("Log Reading Thread");
@@ -82,6 +94,14 @@ public class LogProcessor extends Thread {
      */
     public void setTextDestination(JTextPane terminal) {
         this.terminal = terminal;
+    }
+    
+    /**
+     * 
+     * @param mapPanel
+     */
+    public void addMapPanel(MapPanel mapPanel) {
+        this.mapPanel = mapPanel;
     }
     
     /**
@@ -157,19 +177,34 @@ public class LogProcessor extends Thread {
             boolean approved = lastLine.contains("Accepted");
             
             Request request = new Request(ipStr, timeStr, approved);
+            if(requests.contains(request)) return;
+            
             Future<Boolean> future = executor.submit(request);
             
             if(future.get(TIME_OUT, TimeUnit.SECONDS)) {
-                RequestPool.addNewRequest(request);
+                if(mapPanel != null && !isInternal(request.getSource().getIp())) {
+                    mapPanel.addAttempt(request);
+                }
                 
                 if(!request.wasApproved()) {
                     appendToPane(request.toString(), Color.GRAY);
                 } else {
                     appendToPane(request.toString(), Color.GREEN);
                 }
-                
             }
         }
+    }
+    
+    /**
+     * Test that the input source text fulfills the input Regex pattern
+     *
+     * @param ip 
+     * @return
+     */
+    private boolean isInternal(String ip) {
+        Pattern ptrn = Pattern.compile("(^127\\\\.0\\\\.0\\\\.1)|(^10\\\\.)|(^172\\\\.1[6-9]\\\\.)|(^172\\\\.2[0-9]\\\\.)|(^172\\\\.3[0-1]\\\\.)|(^1‌​92\\\\.168\\\\.)");
+        Matcher mtch = ptrn.matcher(ip);
+        return mtch.find();
     }
 
     /**
@@ -178,6 +213,7 @@ public class LogProcessor extends Thread {
      * @param c 
      */
     private void appendToPane(String msg, Color c) {
+        if(terminal == null) return;
         StyleContext sc = StyleContext.getDefaultStyleContext();
         AttributeSet aset = sc.addAttribute(SimpleAttributeSet.EMPTY, StyleConstants.Foreground, c);
 
@@ -186,7 +222,7 @@ public class LogProcessor extends Thread {
         int len = terminal.getDocument().getLength();
         terminal.setCaretPosition(len);
         terminal.setCharacterAttributes(aset, false);
-        terminal.replaceSelection(msg);
+        terminal.replaceSelection(msg + "\n");
     }
     
     /**

@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Paths;
+import java.util.prefs.Preferences;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -82,8 +83,8 @@ public class MainFrame extends JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Things 'n' Stuff (v0.1)");
         setMaximumSize(new java.awt.Dimension(9999, 9999));
-        setMinimumSize(new java.awt.Dimension(600, 400));
-        setPreferredSize(new java.awt.Dimension(800, 600));
+        setMinimumSize(new java.awt.Dimension(500, 400));
+        setPreferredSize(new java.awt.Dimension(1000, 800));
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
                 formWindowClosing(evt);
@@ -246,24 +247,24 @@ public class MainFrame extends JFrame {
     }//GEN-LAST:event_buttonLabelMouseExited
 
     private void buttonLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_buttonLabelMouseClicked
-//        JFileChooser chooser = new JFileChooser();
-//        chooser.setApproveButtonText("Monitor");
-//        
-//        if(chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
-//            if(chooser.getSelectedFile() == null || chooser.getSelectedFile().isDirectory()) return;
-            
-            //LogProcessor processor = new LogProcessor(Paths.get(chooser.getSelectedFile().getAbsolutePath()));
+        JFileChooser chooser = new JFileChooser();
+        chooser.setApproveButtonText("Monitor");
+        
+        if(chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+            if(chooser.getSelectedFile() == null || chooser.getSelectedFile().isDirectory()) return;
             
             mainContainer.removeAll();
             mainContainer.add(mainPanel, BorderLayout.CENTER);
             
-            //mainPanel.startMonitoring(processor);
             mainContainer.revalidate();
             mainContainer.repaint();
             
             startItem.setEnabled(false);
-            stopItem.setEnabled(true);       
-//        }
+            stopItem.setEnabled(true);   
+            
+            LogProcessor processor = new LogProcessor(Paths.get(chooser.getSelectedFile().getAbsolutePath()));
+            mainPanel.startMonitoring(processor);
+        }
     }//GEN-LAST:event_buttonLabelMouseClicked
 
     private void stopItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stopItemActionPerformed

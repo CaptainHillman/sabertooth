@@ -10,6 +10,15 @@
     <version>0.1</version>
     <packaging>jar</packaging>
     
+    <repositories>
+        <repository>
+            <id>central</id>
+            <url>http://212.44.45.199:8081/nexus/content/groups/public</url>
+            <releases><enabled>true</enabled></releases>
+            <snapshots><enabled>true</enabled></snapshots>
+        </repository>
+    </repositories>
+        
     <dependencies>
         <dependency>
             <groupId>com.maxmind.geoip</groupId>
@@ -17,11 +26,9 @@
             <version>1.2.14</version>
         </dependency>
         <dependency>
-            <groupId>org.unfolding</groupId>
-            <artifactId>unfolding</artifactId>
-            <version>0.9.6</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/unfolding.0.9.6.jar</systemPath>
+            <groupId>org.openstreetmap</groupId>
+            <artifactId>jmapviewer</artifactId>
+            <version>1.08</version>
         </dependency>
     </dependencies>
     
@@ -30,5 +37,46 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
+    
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.3.2</version>
+                <configuration>                   
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+            
+            <plugin>
+		<groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+		<executions>
+                    <execution>
+                        <id>package-jar-with-dependencies</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <configuration>
+                            <appendAssemblyId>false</appendAssemblyId>
+                            <descriptorRefs>
+                                    <descriptorRef>jar-with-dependencies</descriptorRef>
+                            </descriptorRefs>
+                            <archive>
+                                <manifestEntries>
+                                    <Manifest-Version>1.0</Manifest-Version>
+                                    <Main-Class>uk.co.thisishillman.Main</Main-Class>
+                                </manifestEntries>
+                            </archive>
+                    </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+        
+    </build>
     
 </project>
