@@ -141,8 +141,6 @@ public class Request implements Callable<Boolean> {
             ipSource.locate(reqIP);
             setSource(ipSource);
             
-            System.out.println(this.toString());
-            
         } catch(ParseException | IOException excep) {
             excep.printStackTrace(System.out);
         }

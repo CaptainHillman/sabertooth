@@ -23,6 +23,7 @@
  */
 package uk.co.thisishillman.model;
 
+import java.awt.Color;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.file.FileSystems;
@@ -35,6 +36,11 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+import javax.swing.JTextPane;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyleContext;
 
 /**
  * Reads SSH logs and build Request objects
@@ -42,9 +48,6 @@ import java.util.concurrent.TimeUnit;
  * @author M Hillman
  */
 public class LogProcessor extends Thread {
-    
-    // Polling interval in seconds
-    public static final int POLL_DELAY = 60;
     
     // Time out on single request process
     public static final int TIME_OUT = 10;
@@ -58,8 +61,8 @@ public class LogProcessor extends Thread {
     // WatchService
     private WatchService watcher;
     
-    // WatchKey
-    private WatchKey key;
+    // Destination for text output
+    private JTextPane terminal;
     
     /**
      * Initialise a new processor with the input log file at the data source
@@ -74,6 +77,14 @@ public class LogProcessor extends Thread {
     }
     
     /**
+     * 
+     * @param terminal 
+     */
+    public void setTextDestination(JTextPane terminal) {
+        this.terminal = terminal;
+    }
+    
+    /**
      * Start listening for changes in the log file
      */
     @Override
@@ -82,7 +93,7 @@ public class LogProcessor extends Thread {
             RUNNING = true;
             
             this.watcher = FileSystems.getDefault().newWatchService();
-            this.key = logFile.getParent().register(watcher, ENTRY_MODIFY);
+            logFile.getParent().register(watcher, ENTRY_MODIFY);
             super.start();
             
         } catch(Exception e) {
@@ -102,6 +113,7 @@ public class LogProcessor extends Thread {
      */
     @Override
     public void run() {
+        appendToPane("SSH log monitoring successfully started.", Color.GRAY);
         ExecutorService executor = Executors.newSingleThreadExecutor();
         
         while(RUNNING) {
@@ -149,8 +161,32 @@ public class LogProcessor extends Thread {
             
             if(future.get(TIME_OUT, TimeUnit.SECONDS)) {
                 RequestPool.addNewRequest(request);
+                
+                if(!request.wasApproved()) {
+                    appendToPane(request.toString(), Color.GRAY);
+                } else {
+                    appendToPane(request.toString(), Color.GREEN);
+                }
+                
             }
         }
+    }
+
+    /**
+     * 
+     * @param msg
+     * @param c 
+     */
+    private void appendToPane(String msg, Color c) {
+        StyleContext sc = StyleContext.getDefaultStyleContext();
+        AttributeSet aset = sc.addAttribute(SimpleAttributeSet.EMPTY, StyleConstants.Foreground, c);
+
+        aset = sc.addAttribute(aset, StyleConstants.Alignment, StyleConstants.ALIGN_LEFT);
+
+        int len = terminal.getDocument().getLength();
+        terminal.setCaretPosition(len);
+        terminal.setCharacterAttributes(aset, false);
+        terminal.replaceSelection(msg);
     }
     
     /**

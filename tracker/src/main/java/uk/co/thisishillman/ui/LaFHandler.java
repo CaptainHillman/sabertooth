@@ -24,8 +24,14 @@
 package uk.co.thisishillman.ui;
 
 import java.awt.Font;
+import java.awt.FontFormatException;
+import java.awt.GraphicsEnvironment;
 import java.awt.Image;
 import java.awt.Window;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
@@ -40,7 +46,25 @@ import javax.swing.plaf.FontUIResource;
 /**
  * This class handles applying the Nimbus look and feel and window icons.
  */
-public class LaFHandler {
+public final class LaFHandler {
+    
+    // Custom font
+    public static Font GULIM = new Font("Tahoma", Font.PLAIN, 11);
+    
+    static {
+        try {
+            InputStream fontStream = LaFHandler.class.getClass().getResource("/gulim.ttc").openStream();
+            GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+            
+            GULIM = Font.createFont(Font.TRUETYPE_FONT, fontStream);
+            GULIM = GULIM.deriveFont(11.0f);
+            ge.registerFont(GULIM);
+            
+       } catch (IOException | FontFormatException e) {
+            //Handle exception
+       }
+    }
+    
     
     /** 
      * Sets the icons for a given JFrame.

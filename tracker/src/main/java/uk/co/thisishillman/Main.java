@@ -23,22 +23,23 @@
  */
 package uk.co.thisishillman;
 
-import uk.co.thisishillman.model.LogProcessor;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import uk.co.thisishillman.ui.MainFrame;
 
 /**
- *
- * @author Michael
+ * Entry class.
+ * 
+ * @author M Hillman
  */
 public class Main {
     
-    
+    /**
+     * 
+     * @param args 
+     */
     public static void main(String[] args) {
-        Path logFile = Paths.get("D:\\Downloads\\log.txt");
-        
-        LogProcessor reader = new LogProcessor(logFile);
-        reader.start();
+        MainFrame mainFrame = new MainFrame();
+        mainFrame.setLocationRelativeTo(null);
+        mainFrame.setVisible(true);
     }
     
 }
