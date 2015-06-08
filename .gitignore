@@ -1,0 +1,7 @@
+#Ignore output build files created by NetBeans
+/bin
+/target
+
+*.class
+*.zip
+*.exe
