@@ -27,11 +27,9 @@ import java.awt.Desktop;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
-import javax.swing.JEditorPane;
 import javax.swing.JOptionPane;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
-import javax.swing.text.Document;
 
 /**
  * Custom hyper link listener

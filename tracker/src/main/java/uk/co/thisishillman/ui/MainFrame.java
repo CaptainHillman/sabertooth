@@ -29,31 +29,38 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Paths;
-import java.util.prefs.Preferences;
+import javax.swing.ButtonGroup;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import uk.co.thisishillman.model.LogProcessor;
+import uk.co.thisishillman.Main;
+import uk.co.thisishillman.Settings;
+import uk.co.thisishillman.model.OpenSSHProcessor;
 
 /**
- *
- * @author Michael
+ * Main JFrame containing UI components
+ * 
+ * @author M Hillman
  */
 public class MainFrame extends JFrame {
 
-    //
-    private MainPanel mainPanel;
+    // Main UI component after start screen
+    private final MainPanel mainPanel;
     
     /**
      * Initialise a new MainFrame, setting Look and Feel stuff.
      */
     public MainFrame() {
-        initComponents();
-        
-        this.mainPanel = new MainPanel();
-        
         LaFHandler.setNimbusTheme(this);
         LaFHandler.setIconImages(this);
+        
+        initComponents();
+        this.mainPanel = new MainPanel();
+        
+        ButtonGroup menuGrp = new ButtonGroup();
+        menuGrp.add(showMap);
+        menuGrp.add(showChart);
+        showMap.setSelected(true);
     }
 
     // GUI builder shizzle
@@ -64,8 +71,8 @@ public class MainFrame extends JFrame {
 
         mainContainer = new javax.swing.JPanel();
         startPanel = new javax.swing.JPanel();
-        logoLabel = new javax.swing.JLabel();
         buttonLabel = new javax.swing.JLabel();
+        logoLabel = new javax.swing.JLabel();
         menuBar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
         startItem = new javax.swing.JMenuItem();
@@ -75,16 +82,15 @@ public class MainFrame extends JFrame {
         viewMenu = new javax.swing.JMenu();
         showTerminal = new javax.swing.JCheckBoxMenuItem();
         showSettings = new javax.swing.JCheckBoxMenuItem();
-        showMap = new javax.swing.JCheckBoxMenuItem();
+        showMap = new javax.swing.JRadioButtonMenuItem();
+        showChart = new javax.swing.JRadioButtonMenuItem();
         helpMenu = new javax.swing.JMenu();
         aboutItem = new javax.swing.JMenuItem();
         websiteItem = new javax.swing.JMenuItem();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Things 'n' Stuff (v0.1)");
-        setMaximumSize(new java.awt.Dimension(9999, 9999));
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        setTitle(Main.PRODUCT_NAME);
         setMinimumSize(new java.awt.Dimension(500, 400));
-        setPreferredSize(new java.awt.Dimension(1000, 800));
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
                 formWindowClosing(evt);
@@ -96,15 +102,6 @@ public class MainFrame extends JFrame {
 
         startPanel.setBackground(new java.awt.Color(255, 255, 255));
         startPanel.setLayout(new java.awt.GridBagLayout());
-
-        logoLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        logoLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/padlock.png"))); // NOI18N
-        logoLabel.setToolTipText(null);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.weighty = 0.75;
-        startPanel.add(logoLabel, gridBagConstraints);
 
         buttonLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         buttonLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/button.png"))); // NOI18N
@@ -125,6 +122,15 @@ public class MainFrame extends JFrame {
         gridBagConstraints.gridy = 1;
         gridBagConstraints.weighty = 0.25;
         startPanel.add(buttonLabel, gridBagConstraints);
+
+        logoLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        logoLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/stego_700.png"))); // NOI18N
+        logoLabel.setToolTipText(null);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.weighty = 0.75;
+        startPanel.add(logoLabel, gridBagConstraints);
 
         mainContainer.add(startPanel, java.awt.BorderLayout.CENTER);
 
@@ -198,15 +204,23 @@ public class MainFrame extends JFrame {
         });
         viewMenu.add(showSettings);
 
-        showMap.setFont(LaFHandler.GULIM);
         showMap.setSelected(true);
-        showMap.setText("Show Visualisation");
+        showMap.setText("Show World Map");
         showMap.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 showMapActionPerformed(evt);
             }
         });
         viewMenu.add(showMap);
+
+        showChart.setSelected(true);
+        showChart.setText("Show Pie Chart");
+        showChart.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                showChartActionPerformed(evt);
+            }
+        });
+        viewMenu.add(showChart);
 
         menuBar.add(viewMenu);
 
@@ -247,7 +261,7 @@ public class MainFrame extends JFrame {
     }//GEN-LAST:event_buttonLabelMouseExited
 
     private void buttonLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_buttonLabelMouseClicked
-        JFileChooser chooser = new JFileChooser();
+        JFileChooser chooser = new JFileChooser(Settings.getSetting("recent_path"));
         chooser.setApproveButtonText("Monitor");
         
         if(chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
@@ -262,20 +276,22 @@ public class MainFrame extends JFrame {
             startItem.setEnabled(false);
             stopItem.setEnabled(true);   
             
-            LogProcessor processor = new LogProcessor(Paths.get(chooser.getSelectedFile().getAbsolutePath()));
+            OpenSSHProcessor processor = new OpenSSHProcessor(Paths.get(chooser.getSelectedFile().getAbsolutePath()));
             mainPanel.startMonitoring(processor);
+            
+            Settings.putSetting("recent_path", chooser.getSelectedFile().getParent());
         }
     }//GEN-LAST:event_buttonLabelMouseClicked
 
     private void stopItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stopItemActionPerformed
-        LogProcessor.RUNNING = false;
+        OpenSSHProcessor.RUNNING = false;
         
         startItem.setEnabled(true);
         stopItem.setEnabled(false);    
     }//GEN-LAST:event_stopItemActionPerformed
 
     private void fileItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fileItemActionPerformed
-        if(LogProcessor.RUNNING) {
+        if(OpenSSHProcessor.RUNNING) {
             int answer = JOptionPane.showConfirmDialog(this, 
                     "Change the source log file?", "Change Log?", JOptionPane.YES_NO_OPTION);
             
@@ -287,7 +303,7 @@ public class MainFrame extends JFrame {
     }//GEN-LAST:event_fileItemActionPerformed
 
     private void exitItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitItemActionPerformed
-        if(LogProcessor.RUNNING) {
+        if(OpenSSHProcessor.RUNNING) {
             int answer = JOptionPane.showConfirmDialog(this, 
                     "Stop monitoring & close the application?", "Close?", JOptionPane.YES_NO_OPTION);
             
@@ -325,16 +341,20 @@ public class MainFrame extends JFrame {
     }//GEN-LAST:event_formWindowClosing
 
     private void showTerminalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showTerminalActionPerformed
-        mainPanel.updateUI(showTerminal.isSelected(), showSettings.isSelected(), showMap.isSelected());
+        mainPanel.updateUI(showTerminal.isSelected(), showSettings.isSelected(), showMap.isSelected(), showChart.isSelected());
     }//GEN-LAST:event_showTerminalActionPerformed
 
     private void showSettingsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showSettingsActionPerformed
-        mainPanel.updateUI(showTerminal.isSelected(), showSettings.isSelected(), showMap.isSelected());
+        mainPanel.updateUI(showTerminal.isSelected(), showSettings.isSelected(), showMap.isSelected(), showChart.isSelected());
     }//GEN-LAST:event_showSettingsActionPerformed
 
     private void showMapActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showMapActionPerformed
-        mainPanel.updateUI(showTerminal.isSelected(), showSettings.isSelected(), showMap.isSelected());
+        mainPanel.updateUI(showTerminal.isSelected(), showSettings.isSelected(), showMap.isSelected(), showChart.isSelected());
     }//GEN-LAST:event_showMapActionPerformed
+
+    private void showChartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showChartActionPerformed
+        mainPanel.updateUI(showTerminal.isSelected(), showSettings.isSelected(), showMap.isSelected(), showChart.isSelected());
+    }//GEN-LAST:event_showChartActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem aboutItem;
@@ -346,7 +366,8 @@ public class MainFrame extends JFrame {
     private javax.swing.JLabel logoLabel;
     private javax.swing.JPanel mainContainer;
     private javax.swing.JMenuBar menuBar;
-    private javax.swing.JCheckBoxMenuItem showMap;
+    private javax.swing.JRadioButtonMenuItem showChart;
+    private javax.swing.JRadioButtonMenuItem showMap;
     private javax.swing.JCheckBoxMenuItem showSettings;
     private javax.swing.JCheckBoxMenuItem showTerminal;
     private javax.swing.JMenuItem startItem;

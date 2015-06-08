@@ -35,7 +35,7 @@ import org.openstreetmap.gui.jmapviewer.tilesources.BingAerialTileSource;
 import org.openstreetmap.gui.jmapviewer.tilesources.MapQuestOpenAerialTileSource;
 import org.openstreetmap.gui.jmapviewer.tilesources.MapQuestOsmTileSource;
 import org.openstreetmap.gui.jmapviewer.tilesources.OsmTileSource;
-import uk.co.thisishillman.model.LogProcessor;
+import uk.co.thisishillman.model.OpenSSHProcessor;
 
 /**
  *
@@ -44,7 +44,7 @@ import uk.co.thisishillman.model.LogProcessor;
 public class MainPanel extends javax.swing.JPanel {
 
     // SSH log processor
-    private LogProcessor processor;
+    private OpenSSHProcessor processor;
     
     //
     private MapPanel mapPanel;
@@ -83,7 +83,7 @@ public class MainPanel extends javax.swing.JPanel {
      * 
      * @param processor 
      */
-    public void startMonitoring(LogProcessor processor) {
+    public void startMonitoring(OpenSSHProcessor processor) {
         this.mapPanel = new MapPanel(scaleLabel, tileBox);
         
         this.processor = processor;
@@ -96,7 +96,7 @@ public class MainPanel extends javax.swing.JPanel {
         this.centerPanel.repaint();
         
         this.terminal.setText("");
-        appendToPane("SSH log monitoring starting up...", Color.GRAY);
+        appendToPane("Beginning live SSH log monitoring...", Color.BLACK);
         
         this.processor.start();
     }
@@ -106,9 +106,20 @@ public class MainPanel extends javax.swing.JPanel {
      * @param showTerminal
      * @param showSettings
      * @param showMap 
+     * @param showPie
      */
-    public void updateUI(boolean showTerminal, boolean showSettings, boolean showMap) {
+    public void updateUI(boolean showTerminal, boolean showSettings, boolean showMap, boolean showPie) {
         removeAll();
+        
+        if(showPie) {
+            add(new PieChartPanel(processor.getAttempts()), BorderLayout.CENTER);
+            
+            if(showTerminal) add(scrollPane, BorderLayout.SOUTH);
+            
+            revalidate();
+            repaint();
+            return;
+        } 
         
         if(showMap) {
             add(centerPanel, BorderLayout.CENTER);
@@ -149,7 +160,7 @@ public class MainPanel extends javax.swing.JPanel {
         int len = terminal.getDocument().getLength();
         terminal.setCaretPosition(len);
         terminal.setCharacterAttributes(aset, false);
-        terminal.replaceSelection(msg);
+        terminal.replaceSelection(msg + "\n");
     }
     
     @SuppressWarnings("unchecked")
@@ -161,13 +172,13 @@ public class MainPanel extends javax.swing.JPanel {
         centerPanel = new javax.swing.JPanel();
         loadingLabel = new javax.swing.JLabel();
         settingsPanel = new javax.swing.JPanel();
-        scaleTitle = new javax.swing.JLabel();
         scaleLabel = new javax.swing.JLabel();
         boxContainer = new javax.swing.JPanel();
         tileTitle = new javax.swing.JLabel();
-        tileTitle1 = new javax.swing.JLabel();
+        descLabel = new javax.swing.JLabel();
         approvedCheck = new javax.swing.JCheckBox();
         deniedCheck = new javax.swing.JCheckBox();
+        scaleTitle = new javax.swing.JLabel();
         scrollPane = new javax.swing.JScrollPane();
         terminal = new javax.swing.JTextPane();
 
@@ -209,16 +220,6 @@ public class MainPanel extends javax.swing.JPanel {
         settingsPanel.setMinimumSize(new java.awt.Dimension(150, 100));
         settingsPanel.setPreferredSize(new java.awt.Dimension(150, 504));
 
-        scaleTitle.setFont(LaFHandler.GULIM);
-        scaleTitle.setForeground(new java.awt.Color(102, 102, 102));
-        scaleTitle.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        scaleTitle.setText("Metres per Pixel");
-        scaleTitle.setToolTipText(null);
-        scaleTitle.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, new java.awt.Color(153, 153, 153)));
-        scaleTitle.setMaximumSize(new java.awt.Dimension(140, 25));
-        scaleTitle.setMinimumSize(new java.awt.Dimension(140, 25));
-        scaleTitle.setPreferredSize(new java.awt.Dimension(140, 25));
-
         scaleLabel.setFont(LaFHandler.GULIM);
         scaleLabel.setForeground(new java.awt.Color(102, 102, 102));
         scaleLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -246,15 +247,15 @@ public class MainPanel extends javax.swing.JPanel {
         tileTitle.setMinimumSize(new java.awt.Dimension(140, 25));
         tileTitle.setPreferredSize(new java.awt.Dimension(140, 25));
 
-        tileTitle1.setFont(LaFHandler.GULIM);
-        tileTitle1.setForeground(new java.awt.Color(102, 102, 102));
-        tileTitle1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        tileTitle1.setText("<html><p align=\"center\">Use the right mouse button to move, left double click or mouse wheel to zoom.</p></html>");
-        tileTitle1.setToolTipText(null);
-        tileTitle1.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 5, 0, 5));
-        tileTitle1.setMaximumSize(new java.awt.Dimension(140, 150));
-        tileTitle1.setMinimumSize(new java.awt.Dimension(140, 150));
-        tileTitle1.setPreferredSize(new java.awt.Dimension(140, 150));
+        descLabel.setFont(LaFHandler.GULIM);
+        descLabel.setForeground(new java.awt.Color(102, 102, 102));
+        descLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        descLabel.setText("<html><p align=\"center\">Use the right mouse button to move, left double click or mouse wheel to zoom.</p></html>");
+        descLabel.setToolTipText(null);
+        descLabel.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 5, 0, 5));
+        descLabel.setMaximumSize(new java.awt.Dimension(140, 150));
+        descLabel.setMinimumSize(new java.awt.Dimension(140, 150));
+        descLabel.setPreferredSize(new java.awt.Dimension(140, 150));
 
         approvedCheck.setFont(LaFHandler.GULIM);
         approvedCheck.setForeground(new java.awt.Color(102, 102, 102));
@@ -281,6 +282,16 @@ public class MainPanel extends javax.swing.JPanel {
         deniedCheck.setOpaque(false);
         deniedCheck.setPreferredSize(new java.awt.Dimension(140, 25));
 
+        scaleTitle.setFont(LaFHandler.GULIM);
+        scaleTitle.setForeground(new java.awt.Color(102, 102, 102));
+        scaleTitle.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        scaleTitle.setText("Metres per Pixel");
+        scaleTitle.setToolTipText(null);
+        scaleTitle.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, new java.awt.Color(153, 153, 153)));
+        scaleTitle.setMaximumSize(new java.awt.Dimension(140, 25));
+        scaleTitle.setMinimumSize(new java.awt.Dimension(140, 25));
+        scaleTitle.setPreferredSize(new java.awt.Dimension(140, 25));
+
         javax.swing.GroupLayout settingsPanelLayout = new javax.swing.GroupLayout(settingsPanel);
         settingsPanel.setLayout(settingsPanelLayout);
         settingsPanelLayout.setHorizontalGroup(
@@ -288,48 +299,40 @@ public class MainPanel extends javax.swing.JPanel {
             .addGroup(settingsPanelLayout.createSequentialGroup()
                 .addGroup(settingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(settingsPanelLayout.createSequentialGroup()
-                        .addGroup(settingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(settingsPanelLayout.createSequentialGroup()
-                                .addGap(5, 5, 5)
-                                .addGroup(settingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(settingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(boxContainer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(tileTitle, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addComponent(tileTitle1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(settingsPanelLayout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(approvedCheck, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(settingsPanelLayout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(deniedCheck, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, settingsPanelLayout.createSequentialGroup()
                         .addGap(5, 5, 5)
-                        .addComponent(scaleLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap())
-            .addGroup(settingsPanelLayout.createSequentialGroup()
-                .addGap(5, 5, 5)
-                .addComponent(scaleTitle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(settingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(settingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(boxContainer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(tileTitle, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(scaleTitle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(scaleLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(descLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(settingsPanelLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(approvedCheck, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(settingsPanelLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(deniedCheck, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         settingsPanelLayout.setVerticalGroup(
             settingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, settingsPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(tileTitle1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(descLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(15, 15, 15)
                 .addComponent(tileTitle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(boxContainer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(10, 10, 10)
+                .addGap(18, 18, 18)
+                .addComponent(scaleTitle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(scaleLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addComponent(approvedCheck, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(10, 10, 10)
                 .addComponent(deniedCheck, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(135, 135, 135)
-                .addComponent(scaleTitle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(scaleLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addGap(120, 120, 120))
         );
 
         add(settingsPanel, java.awt.BorderLayout.WEST);
@@ -337,6 +340,8 @@ public class MainPanel extends javax.swing.JPanel {
         scrollPane.setMaximumSize(new java.awt.Dimension(32767, 100));
         scrollPane.setMinimumSize(new java.awt.Dimension(23, 100));
         scrollPane.setPreferredSize(new java.awt.Dimension(8, 100));
+
+        terminal.setFont(LaFHandler.GULIM);
         scrollPane.setViewportView(terminal);
 
         add(scrollPane, java.awt.BorderLayout.SOUTH);
@@ -351,6 +356,7 @@ public class MainPanel extends javax.swing.JPanel {
     private javax.swing.JPanel boxContainer;
     private javax.swing.JPanel centerPanel;
     private javax.swing.JCheckBox deniedCheck;
+    private javax.swing.JLabel descLabel;
     private javax.swing.JLabel emptyLabel;
     private javax.swing.JLabel loadingLabel;
     private javax.swing.JLabel noMapLabel;
@@ -360,7 +366,6 @@ public class MainPanel extends javax.swing.JPanel {
     private javax.swing.JPanel settingsPanel;
     private javax.swing.JTextPane terminal;
     private javax.swing.JLabel tileTitle;
-    private javax.swing.JLabel tileTitle1;
     // End of variables declaration//GEN-END:variables
 
 }

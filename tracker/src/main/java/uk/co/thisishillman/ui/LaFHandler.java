@@ -73,7 +73,9 @@ public final class LaFHandler {
      */
     public static void setIconImages(Window window) {
         List<Image> imageList = new ArrayList<>();
-        imageList.add(new ImageIcon(LaFHandler.class.getClass().getResource("/padlock_16.png")).getImage());
+        imageList.add(new ImageIcon(LaFHandler.class.getClass().getResource("/logo_16.png")).getImage());
+        imageList.add(new ImageIcon(LaFHandler.class.getClass().getResource("/logo_32.png")).getImage());
+        imageList.add(new ImageIcon(LaFHandler.class.getClass().getResource("/logo_64.png")).getImage());
         window.setIconImages(imageList);  
     }
     

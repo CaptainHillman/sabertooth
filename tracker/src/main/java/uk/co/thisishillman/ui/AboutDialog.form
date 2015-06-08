@@ -23,7 +23,7 @@
     <AuxValue name="FormSettings_listenerGenerationStyle" type="java.lang.Integer" value="0"/>
     <AuxValue name="FormSettings_variablesLocal" type="java.lang.Boolean" value="false"/>
     <AuxValue name="FormSettings_variablesModifier" type="java.lang.Integer" value="2"/>
-    <AuxValue name="designerSize" type="java.awt.Dimension" value="-84,-19,0,5,115,114,0,18,106,97,118,97,46,97,119,116,46,68,105,109,101,110,115,105,111,110,65,-114,-39,-41,-84,95,68,20,2,0,2,73,0,6,104,101,105,103,104,116,73,0,5,119,105,100,116,104,120,112,0,0,1,44,0,0,1,-112"/>
+    <AuxValue name="designerSize" type="java.awt.Dimension" value="-84,-19,0,5,115,114,0,18,106,97,118,97,46,97,119,116,46,68,105,109,101,110,115,105,111,110,65,-114,-39,-41,-84,95,68,20,2,0,2,73,0,6,104,101,105,103,104,116,73,0,5,119,105,100,116,104,120,112,0,0,1,44,0,0,2,8"/>
   </AuxValues>
 
   <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout"/>
@@ -45,9 +45,9 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="detailsPanel" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                  <Component id="copyrightLabel" max="32767" attributes="0"/>
+                  <Component id="detailsPanel" min="-2" pref="330" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="copyrightLabel" pref="166" max="32767" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
@@ -58,7 +58,7 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="detailsPanel" pref="278" max="32767" attributes="0"/>
-                      <Component id="copyrightLabel" pref="378" max="32767" attributes="0"/>
+                      <Component id="copyrightLabel" pref="278" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
@@ -98,7 +98,7 @@
                           <Group type="102" attributes="0">
                               <Component id="websiteTitle" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="websiteLabel" pref="210" max="32767" attributes="0"/>
+                              <Component id="websiteLabel" max="32767" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="versionTitle" min="-2" max="-2" attributes="0"/>
@@ -108,7 +108,7 @@
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="authorTitle" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="authorLabel" pref="210" max="32767" attributes="0"/>
+                              <Component id="authorLabel" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
@@ -251,7 +251,7 @@
                     <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                       <Connection code="LaFHandler.GULIM" type="code"/>
                     </Property>
-                    <Property name="text" type="java.lang.String" value="&lt;html&gt;&#xd;&#xa;&lt;p align=&quot;center&quot;&gt;&#xa;&#xa;&lt;a href=&quot;http://www.flaticon.com/free-icon/locked-internet-security-padlock_59893&quot;&gt;Padlock icon made by Freepik from FlatIcon&lt;/a&gt;&lt;br&gt;&#xa;&lt;a href=&quot;http://dev.maxmind.com/geoip/&quot;&gt;IP Location provided by MaxMind&lt;/a&gt;&lt;br&gt;&#xa;&lt;a href=&quot;http://cooltext.com/Download-Font-%EA%B5%B4%EB%A6%BC+Gulim&quot;&gt;Gulim font provided by Cool Text&lt;/a&gt;&#xa;&#xa;&lt;/p&gt;&#xa;&lt;/html&gt;&#xd;&#xa;"/>
+                    <Property name="text" type="java.lang.String" value="&lt;html&gt;&#xd;&#xa;&lt;p align=&quot;center&quot;&gt;&#xa;&#xa;&lt;a href=&quot;https://www.vectoropenstock.com/vectors/preview/71307/dinosaur-prehistoric-animal-silhouettes&quot;&gt;Stego icon provided by VectorOpenStock&lt;/a&gt;&lt;br&gt;&#xa;&lt;a href=&quot;http://dev.maxmind.com/geoip/&quot;&gt;IP Location provided by MaxMind&lt;/a&gt;&lt;br&gt;&#xa;&lt;a href=&quot;http://cooltext.com/Download-Font-%EA%B5%B4%EB%A6%BC+Gulim&quot;&gt;Gulim font provided by Cool Text&lt;/a&gt;&lt;br&gt;&#xa;&lt;a href=&quot;https://commons.apache.org/proper/commons-io/&quot;&gt;IO Commons provided by Apache&lt;/a&gt;&lt;br&gt;&#xa;&lt;a href=&quot;http://www.jfree.org/jfreechart/&quot;&gt;Charting provided by JFreeChart&lt;/a&gt;&lt;br&gt;&#xa;&lt;a href=&quot;http://wiki.openstreetmap.org/wiki/JMapViewer&quot;&gt;Mapping provided by JMapViewer&lt;/a&gt;&#xa;&lt;/p&gt;&#xa;&lt;/html&gt;&#xd;&#xa;"/>
                     <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                       <Connection code="null" type="code"/>
                     </Property>
@@ -268,7 +268,9 @@
                   <Color blue="99" green="99" red="99" type="rgb"/>
                 </Property>
                 <Property name="horizontalAlignment" type="int" value="0"/>
-                <Property name="text" type="java.lang.String" value="Version 0.1 (Alpha)"/>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                  <Connection code="Main.VERSION" type="code"/>
+                </Property>
                 <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                   <Connection code="null" type="code"/>
                 </Property>
@@ -316,7 +318,7 @@
                   <Color blue="99" green="99" red="99" type="rgb"/>
                 </Property>
                 <Property name="horizontalAlignment" type="int" value="0"/>
-                <Property name="text" type="java.lang.String" value="thisishillman.co.uk"/>
+                <Property name="text" type="java.lang.String" value="thisishillman.co.uk/stego"/>
                 <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                   <Connection code="null" type="code"/>
                 </Property>
@@ -342,10 +344,7 @@
               <Color blue="99" green="99" red="99" type="rgb"/>
             </Property>
             <Property name="horizontalAlignment" type="int" value="0"/>
-            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/padlock_128.png"/>
-            </Property>
-            <Property name="text" type="java.lang.String" value="&lt;html&gt;&lt;p align=&quot;center&quot;&gt;&lt;br&gt;&lt;br&gt;Permission is hereby granted, free of charge, to any person obtaining a copy of this software to deal in the software without restriction, including the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the software.&lt;br&gt;&lt;br&gt;Please see the MIT Licence for more information.&lt;/p&gt;&lt;/html&gt;"/>
+            <Property name="text" type="java.lang.String" value="&lt;html&gt;&lt;p align=&quot;center&quot;&gt;&lt;br&gt;Copyright 2015 - M Hillman&lt;br&gt;&lt;br&gt;Please see the MIT Licence for more information.&lt;/p&gt;&lt;/html&gt;"/>
             <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
               <Connection code="null" type="code"/>
             </Property>

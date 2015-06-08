@@ -36,31 +36,76 @@ import java.util.concurrent.Callable;
  * 
  * @author M Hillman
  */
-public class Request implements Callable<Boolean> {
+public class AccessAttempt implements Callable<Boolean> {
     
-    // Unprocessed source strings
-    private final String stringIP, stringTime;
-    
-    // Time of attempt (GMT)
+    // Time of attempt (local time)
     private GregorianCalendar time;
     
     // Source of attempt
-    private IPLocation source;
+    private IP source;
+    
+    // User name for attempt
+    private String username;
+    
+    // Port for attempt
+    private int port;
     
     // Was request approved
     private boolean approved;
 
     /**
-     * Initialise a new (un-processed) request with the input details.
+     * Attempt to parse the strings taken from the log file into time of request and location of request data objects
      * 
-     * @param stringIP un-parsed IP string from log file
-     * @param stringTime un-parsed time string from log file
-     * @param approved true if the attempt was approved
+     * @return true if parsing successful 
      */
-    public Request(String stringIP, String stringTime, boolean approved) {
-        this.stringIP = stringIP;
-        this.stringTime = stringTime;
-        this.approved = approved;
+    @Override
+    public Boolean call() {
+        try {
+            
+            if(source != null) {
+                source.locate();
+                setSource(source);
+            }
+            
+        } catch(IOException ioExcep) {
+            return false;
+        }
+        return true;
+    }
+    
+    /**
+     * 
+     * @param ip IP string to set
+     */
+    public void setIP(String ip) {
+        getSource().setIp(ip);
+    }
+    
+    /**
+     * 
+     * @param time Un-parsed time string to set
+     */
+    public void setTime(String time) {
+        try {
+            String parsedTime = time.replaceAll("  ", " 0").replaceAll("\\s+", "");
+
+            SimpleDateFormat formatter = new SimpleDateFormat("MMMddhh:mm:ss");
+            GregorianCalendar date = new GregorianCalendar();
+            date.setTime(formatter.parse(parsedTime));
+
+            int year   = date.get(Calendar.YEAR);
+            int month  = date.get(Calendar.MONTH);
+            int day    = date.get(Calendar.DAY_OF_MONTH);
+            int hour   = date.get(Calendar.HOUR_OF_DAY);
+            int minute = date.get(Calendar.MINUTE);
+
+            GregorianCalendar ipTime = new GregorianCalendar();
+            ipTime.set(year, month, day, hour, minute, 0);
+            setTime(ipTime);
+            
+        } catch(ParseException excep) {
+            setTime(new GregorianCalendar());
+        }
     }
     
     /**
@@ -83,9 +128,9 @@ public class Request implements Callable<Boolean> {
     /**
      * @return the source of the attempt
      */
-    public IPLocation getSource() {
+    public IP getSource() {
         if(source == null) {
-            source = new IPLocation();
+            source = new IP();
         }
         return source;
     }
@@ -93,7 +138,7 @@ public class Request implements Callable<Boolean> {
     /**
      * @param source set the source of the attempt
      */
-    public void setSource(IPLocation source) {
+    public void setSource(IP source) {
         this.source = source;
     }
     
@@ -110,44 +155,35 @@ public class Request implements Callable<Boolean> {
     public void setApproved(boolean approved) {
         this.approved = approved;
     }
+    
+    /**
+     * @return the username
+     */
+    public String getUsername() {
+        return username;
+    }
 
     /**
-     * Attempt to parse the strings taken from the log file into time of request and location of request data objects
-     * 
-      * @return true if parsing successful 
+     * @param username the username to set
      */
-    @Override
-    public Boolean call() {
-        try {
-            // Build and store request's time and location
-            String reqIP   = stringIP;
-            String reqTime = stringTime;
-
-            SimpleDateFormat formatter = new SimpleDateFormat("MMM  dd hh:mm:ss");
-            GregorianCalendar date = new GregorianCalendar();
-            date.setTime(formatter.parse(reqTime));
-
-            int year   = date.get(Calendar.YEAR);
-            int month  = date.get(Calendar.MONTH);
-            int day    = date.get(Calendar.DAY_OF_MONTH);
-            int hour   = date.get(Calendar.HOUR_OF_DAY);
-            int minute = date.get(Calendar.MINUTE);
-
-            GregorianCalendar ipTime = new GregorianCalendar();
-            ipTime.set(year, month, day, hour, minute, 0);
-            setTime(ipTime);
-
-            IPLocation ipSource = new IPLocation();
-            ipSource.locate(reqIP);
-            setSource(ipSource);
-            
-        } catch(ParseException | IOException excep) {
-            excep.printStackTrace(System.out);
-        }
-        
-        return true;
+    public void setUsername(String username) {
+        this.username = username;
     }
-    
+
+    /**
+     * @return the port
+     */
+    public int getPort() {
+        return port;
+    }
+
+    /**
+     * @param port the port to set
+     */
+    public void setPort(int port) {
+        this.port = port;
+    }
+
     /**
      * Standard equals comparison
      * 
@@ -157,9 +193,9 @@ public class Request implements Callable<Boolean> {
     @Override
     public boolean equals(Object obj) {
         if(obj == null) return false;
-        if( !(obj instanceof Request) ) return false;
+        if( !(obj instanceof AccessAttempt) ) return false;
         
-        Request req = (Request) obj;
+        AccessAttempt req = (AccessAttempt) obj;
         
         if( this.approved != req.wasApproved() ) return false;
         if( !this.getTime().equals(req.getTime()) ) return false;

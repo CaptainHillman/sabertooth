@@ -25,7 +25,9 @@ package uk.co.thisishillman.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.event.ItemEvent;
+import java.util.ListIterator;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -34,10 +36,12 @@ import org.openstreetmap.gui.jmapviewer.JMapViewerTree;
 import org.openstreetmap.gui.jmapviewer.Layer;
 import org.openstreetmap.gui.jmapviewer.LayerGroup;
 import org.openstreetmap.gui.jmapviewer.MapMarkerDot;
+import org.openstreetmap.gui.jmapviewer.Style;
 import org.openstreetmap.gui.jmapviewer.events.JMVCommandEvent;
 import org.openstreetmap.gui.jmapviewer.interfaces.JMapViewerEventListener;
+import org.openstreetmap.gui.jmapviewer.interfaces.MapMarker;
 import org.openstreetmap.gui.jmapviewer.interfaces.TileSource;
-import uk.co.thisishillman.model.Request;
+import uk.co.thisishillman.model.AccessAttempt;
 
 /**
  *
@@ -66,6 +70,10 @@ public class MapPanel extends JPanel implements JMapViewerEventListener {
     //
     private JMapViewer map;
     
+    //
+    private Style approvedStyle, deniedStyle;
+    
+    
     /**
      * Creates new MapPanel
      * 
@@ -90,6 +98,7 @@ public class MapPanel extends JPanel implements JMapViewerEventListener {
         
         treeMap = new JMapViewerTree("Zones");
         map = treeMap.getViewer();
+        map.addJMVListener(this);
         
         add(treeMap, BorderLayout.CENTER);
         
@@ -99,6 +108,16 @@ public class MapPanel extends JPanel implements JMapViewerEventListener {
         
         treeMap.addLayer(deniedLayer);
         treeMap.addLayer(approvedLayer);
+        
+        map.setZoom(map.getZoom() - 1);
+        updateZoomParameters();
+        map.repaint();
+        
+        Font small = LaFHandler.GULIM.deriveFont(10.0f);
+        small = small.deriveFont(Font.PLAIN);
+                
+        approvedStyle = new Style(new Color(0, 255, 0, 150), new Color(0, 255, 0, 100), null, small);
+        deniedStyle = new Style(new Color(255, 0, 0, 150), new Color(255, 0, 0, 100), null, small);
     }
     
     /**
@@ -117,22 +136,55 @@ public class MapPanel extends JPanel implements JMapViewerEventListener {
      * 
      * @param req 
      */
-    public void addAttempt(Request req) {
+    public void addAttempt(AccessAttempt req) {
         MapMarkerDot dot;
         
         if(req.wasApproved()) {
-            dot = new MapMarkerDot(approvedLayer, req.getSource().getIp(),
+            dot = new MapMarkerDot(approvedLayer, "1",
                     req.getSource().getLatitude(), req.getSource().getLongitude());
-            dot.setColor(Color.GREEN);
+            
+            dot.setStyle(approvedStyle);
+            
         } else {
-            dot = new MapMarkerDot(deniedLayer, req.getSource().getIp(),
+            dot = new MapMarkerDot(deniedLayer, "1",
                     req.getSource().getLatitude(), req.getSource().getLongitude());
-            dot.setColor(Color.RED);
+            
+            dot.setStyle(deniedStyle);
         }
         
-        if( !map.getMapMarkerList().contains(dot) ) {
+        if( !combineMarkers(dot) ) {
             map.addMapMarker(dot);
         }
+    }
+    
+    /**
+     * 
+     * @param newMarker 
+     */
+    private boolean combineMarkers(MapMarker newMarker) {
+        ListIterator iter = map.getMapMarkerList().listIterator();
+        boolean combined = false;
+        
+        while(iter.hasNext()) {
+            MapMarker marker = (MapMarker) iter.next();
+            
+            if(marker.getLat() == newMarker.getLat()) {
+                if(marker.getLon() == newMarker.getLon()) {
+                    
+                    String name = marker.getName();
+                    int attempts = Integer.parseInt(name.replaceAll("[^\\d.]", "")) + 1;
+                    
+                    MapMarkerDot multiDot = new MapMarkerDot(marker.getLayer(), Integer.toString(attempts), marker.getLat(), marker.getLon());  
+                    multiDot.setStyle(newMarker.getStyle());
+                    
+                    iter.set(multiDot);
+                    combined = true;
+                }
+            }
+        }
+        
+        map.repaint();
+        return combined;
     }
     
     /**
@@ -140,7 +192,7 @@ public class MapPanel extends JPanel implements JMapViewerEventListener {
      */
     private void updateZoomParameters() {
         if (scaleLabel != null) {
-            scaleLabel.setText( String.format("%s", map.getMeterPerPixel()) );
+            scaleLabel.setText( String.format("%.3f", map.getMeterPerPixel()) );
         }
     }
 
@@ -161,7 +213,7 @@ public class MapPanel extends JPanel implements JMapViewerEventListener {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        setBackground(new java.awt.Color(255, 255, 204));
+        setBackground(new java.awt.Color(255, 255, 255));
         setLayout(new java.awt.BorderLayout());
     }// </editor-fold>//GEN-END:initComponents
 

@@ -30,12 +30,19 @@ import javax.swing.JOptionPane;
 import uk.co.thisishillman.ui.MainFrame;
 
 /**
- * Entry class.
+ * Main entry class.
  * 
  * @author M Hillman
  */
 public class Main {
     
+    // Product name
+    public static final String PRODUCT_NAME = "Stegosaurus SSH Tracker";
+    
+    // Version number
+    public static final String VERSION = "1.0";
+    
+    // Absolute location to execution directory
     public static String EXEC_DIR;
     
     /** 
@@ -58,9 +65,11 @@ public class Main {
             System.exit(-1);
         }
     }
+    
     /**
+     * Main entry point to code, launches a new MainFrame
      * 
-     * @param args 
+     * @param args command line arguments
      */
     public static void main(String[] args) {
         determineExecutionDirectory();

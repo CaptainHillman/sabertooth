@@ -24,6 +24,7 @@
 package uk.co.thisishillman.ui;
 
 import javax.swing.JFrame;
+import uk.co.thisishillman.Main;
 
 /**
  *
@@ -41,7 +42,6 @@ public class AboutDialog extends javax.swing.JDialog {
         initComponents();
         
         editorPane.addHyperlinkListener(new LinkListener());
-        
         LaFHandler.setIconImages(this);
         LaFHandler.setNimbusTheme(this);
     }
@@ -65,7 +65,6 @@ public class AboutDialog extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("About...");
-        setMaximumSize(new java.awt.Dimension(999, 999));
         setMinimumSize(new java.awt.Dimension(300, 200));
         setModal(true);
 
@@ -112,14 +111,14 @@ public class AboutDialog extends javax.swing.JDialog {
         editorPane.setBorder(null);
         editorPane.setContentType("text/html"); // NOI18N
         editorPane.setFont(LaFHandler.GULIM);
-        editorPane.setText("<html>\r\n<p align=\"center\">\n\n<a href=\"http://www.flaticon.com/free-icon/locked-internet-security-padlock_59893\">Padlock icon made by Freepik from FlatIcon</a><br>\n<a href=\"http://dev.maxmind.com/geoip/\">IP Location provided by MaxMind</a><br>\n<a href=\"http://cooltext.com/Download-Font-%EA%B5%B4%EB%A6%BC+Gulim\">Gulim font provided by Cool Text</a>\n\n</p>\n</html>\r\n");
+        editorPane.setText("<html>\r\n<p align=\"center\">\n\n<a href=\"https://www.vectoropenstock.com/vectors/preview/71307/dinosaur-prehistoric-animal-silhouettes\">Stego icon provided by VectorOpenStock</a><br>\n<a href=\"http://dev.maxmind.com/geoip/\">IP Location provided by MaxMind</a><br>\n<a href=\"http://cooltext.com/Download-Font-%EA%B5%B4%EB%A6%BC+Gulim\">Gulim font provided by Cool Text</a><br>\n<a href=\"https://commons.apache.org/proper/commons-io/\">IO Commons provided by Apache</a><br>\n<a href=\"http://www.jfree.org/jfreechart/\">Charting provided by JFreeChart</a><br>\n<a href=\"http://wiki.openstreetmap.org/wiki/JMapViewer\">Mapping provided by JMapViewer</a>\n</p>\n</html>\r\n");
         editorPane.setToolTipText(null);
         jScrollPane1.setViewportView(editorPane);
 
         versionLabel.setFont(LaFHandler.GULIM);
         versionLabel.setForeground(new java.awt.Color(153, 153, 153));
         versionLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        versionLabel.setText("Version 0.1 (Alpha)");
+        versionLabel.setText(Main.VERSION);
         versionLabel.setToolTipText(null);
         versionLabel.setMaximumSize(new java.awt.Dimension(150, 25));
         versionLabel.setMinimumSize(new java.awt.Dimension(150, 25));
@@ -137,7 +136,7 @@ public class AboutDialog extends javax.swing.JDialog {
         websiteLabel.setFont(LaFHandler.GULIM);
         websiteLabel.setForeground(new java.awt.Color(153, 153, 153));
         websiteLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        websiteLabel.setText("thisishillman.co.uk");
+        websiteLabel.setText("thisishillman.co.uk/stego");
         websiteLabel.setToolTipText(null);
         websiteLabel.setMaximumSize(new java.awt.Dimension(150, 25));
         websiteLabel.setMinimumSize(new java.awt.Dimension(150, 25));
@@ -155,7 +154,7 @@ public class AboutDialog extends javax.swing.JDialog {
                     .addGroup(detailsPanelLayout.createSequentialGroup()
                         .addComponent(websiteTitle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(websiteLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 210, Short.MAX_VALUE))
+                        .addComponent(websiteLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(detailsPanelLayout.createSequentialGroup()
                         .addComponent(versionTitle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -163,7 +162,7 @@ public class AboutDialog extends javax.swing.JDialog {
                     .addGroup(detailsPanelLayout.createSequentialGroup()
                         .addComponent(authorTitle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(authorLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 210, Short.MAX_VALUE)))
+                        .addComponent(authorLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         detailsPanelLayout.setVerticalGroup(
@@ -191,8 +190,7 @@ public class AboutDialog extends javax.swing.JDialog {
         copyrightLabel.setFont(LaFHandler.GULIM);
         copyrightLabel.setForeground(new java.awt.Color(153, 153, 153));
         copyrightLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        copyrightLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/padlock_128.png"))); // NOI18N
-        copyrightLabel.setText("<html><p align=\"center\"><br><br>Permission is hereby granted, free of charge, to any person obtaining a copy of this software to deal in the software without restriction, including the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the software.<br><br>Please see the MIT Licence for more information.</p></html>");
+        copyrightLabel.setText("<html><p align=\"center\"><br>Copyright 2015 - M Hillman<br><br>Please see the MIT Licence for more information.</p></html>");
         copyrightLabel.setToolTipText(null);
         copyrightLabel.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         copyrightLabel.setMaximumSize(new java.awt.Dimension(999, 999));
@@ -206,9 +204,9 @@ public class AboutDialog extends javax.swing.JDialog {
             containerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(containerLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(detailsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(copyrightLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(detailsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 330, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(copyrightLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 166, Short.MAX_VALUE)
                 .addContainerGap())
         );
         containerLayout.setVerticalGroup(
@@ -216,8 +214,8 @@ public class AboutDialog extends javax.swing.JDialog {
             .addGroup(containerLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(containerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(detailsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 378, Short.MAX_VALUE)
-                    .addComponent(copyrightLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 378, Short.MAX_VALUE))
+                    .addComponent(detailsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 278, Short.MAX_VALUE)
+                    .addComponent(copyrightLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 278, Short.MAX_VALUE))
                 .addContainerGap())
         );
 

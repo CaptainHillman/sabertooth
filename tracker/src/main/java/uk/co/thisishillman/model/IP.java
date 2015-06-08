@@ -35,7 +35,7 @@ import uk.co.thisishillman.Main;
  * 
  * @author M Hillman
  */
-public class IPLocation {
+public class IP {
     
     // Geo IP database
     public static File GEO_DB;
@@ -66,10 +66,9 @@ public class IPLocation {
     /**
      * Use the GeoIP API to determine a location for the access request
      * 
-     * @param ip
      * @throws IOException 
      */
-    public void locate(String ip) throws IOException {
+    public void locate() throws IOException {
         this.setIp(ip);
         
         LookupService lookup = new LookupService(GEO_DB, LookupService.GEOIP_MEMORY_CACHE);
@@ -177,9 +176,9 @@ public class IPLocation {
     @Override
     public boolean equals(Object obj) {
         if(obj == null) return false;
-        if( !(obj instanceof IPLocation) ) return false;
+        if( !(obj instanceof IP) ) return false;
         
-        IPLocation location = (IPLocation) obj;
+        IP location = (IP) obj;
         
         if( !this.ip.equals(location.ip) ) return false;
         if( !this.country.equals(location.country) ) return false;

@@ -24,7 +24,10 @@
 package uk.co.thisishillman.model;
 
 import java.awt.Color;
+import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.RandomAccessFile;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
@@ -36,23 +39,24 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.swing.JOptionPane;
 import javax.swing.JTextPane;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyleContext;
+import org.apache.commons.io.IOUtils;
+import uk.co.thisishillman.Settings;
 import uk.co.thisishillman.ui.MapPanel;
 
 /**
- * Reads SSH logs and build Request objects
+ * Reads SSH logs and build AccessAttempt objects
  * 
  * @author M Hillman
  */
-public class LogProcessor extends Thread {
+public abstract class AbstractLogProcessor extends Thread {
     
     // Time out on single request process
     public static final int TIME_OUT = 100;
@@ -60,27 +64,27 @@ public class LogProcessor extends Thread {
     // Running flag
     public static volatile boolean RUNNING;
     
+    // To stop duplicates
+    protected final List<AccessAttempt> requests;
+    
     // Location of log file
-    private final Path logFile;
+    protected final Path logFile;
     
     // WatchService
-    private WatchService watcher;
+    protected WatchService watcher;
     
     // Destination for text output
-    private JTextPane terminal;
+    protected JTextPane terminal;
     
     // Map Panel
-    private MapPanel mapPanel;
-    
-    // To sop duplicates
-    private final List<Request> requests;
+    protected MapPanel mapPanel;
     
     /**
      * Initialise a new processor with the input log file at the data source
      * 
      * @param logFile 
      */
-    public LogProcessor(Path logFile) {
+    public AbstractLogProcessor(Path logFile) {
         this.logFile = logFile;
         this.requests = new ArrayList<>();
         
@@ -104,6 +108,14 @@ public class LogProcessor extends Thread {
         this.mapPanel = mapPanel;
     }
     
+    /** 
+     * Returns a list of SSH access attempts
+     * @return 
+     */
+    public List<AccessAttempt> getAttempts() {
+        return this.requests;
+    }
+    
     /**
      * Start listening for changes in the log file
      */
@@ -117,7 +129,10 @@ public class LogProcessor extends Thread {
             super.start();
             
         } catch(Exception e) {
-            e.printStackTrace(System.out);
+            stopRunning();
+            
+            JOptionPane.showMessageDialog(null, "Cannot start file reading process, please check file permissions!", 
+                    "Read Error!", JOptionPane.ERROR_MESSAGE);
         }
     }
     
@@ -133,78 +148,84 @@ public class LogProcessor extends Thread {
      */
     @Override
     public void run() {
-        appendToPane("SSH log monitoring successfully started.", Color.GRAY);
         ExecutorService executor = Executors.newSingleThreadExecutor();
+        
+        if(Boolean.parseBoolean(Settings.getSetting("back_date"))) {
+            backDate(executor);
+            appendToPane("Information already present in SSH log file successfully added.", Color.BLACK);
+        }
+        
+        appendToPane("Live SSH log monitoring successfully started.", Color.BLACK);
         
         while(RUNNING) {
             try {
+                
                 WatchKey wKey = watcher.take();
                 
                 for(WatchEvent<?> event : wKey.pollEvents()) {
                     Path changedFile = (Path) event.context();
-                    
+
                     if (changedFile.endsWith(logFile.getFileName())) {
-                        parseLine(executor);
+                        parseLine(executor, getLastLine());
                     }
                 }
+                
                 wKey.reset();
                 
             } catch(Exception excep) {
-                excep.printStackTrace(System.out);
-            }
-        }
-        
-        executor.shutdownNow();
-    }
-    
-    /**
-     * Attempts to parse the last line of the log file into an actual Request object before pooling it. Include a timeout
-     * on the parsing logic in case it takes ages for a IP location to be found.
-     * 
-     * @param executor executor service
-     * @throws Exception 
-     */
-    private void parseLine(ExecutorService executor) throws Exception {
-        String lastLine = getLastLine();
-        if(lastLine == null || lastLine.trim().isEmpty()) return;
-        
-        if(lastLine.contains(": Invalid user")
-                || lastLine.contains(": Failed password for")
-                || lastLine.contains(": Accepted password for")) {
-            
-            String timeStr = lastLine.split("localhost")[0].trim();
-            String ipStr = lastLine.split("from")[1].split("port")[0].trim();
-            boolean approved = lastLine.contains("Accepted");
-            
-            Request request = new Request(ipStr, timeStr, approved);
-            if(requests.contains(request)) return;
-            
-            Future<Boolean> future = executor.submit(request);
-            
-            if(future.get(TIME_OUT, TimeUnit.SECONDS)) {
-                if(mapPanel != null && !isInternal(request.getSource().getIp())) {
-                    mapPanel.addAttempt(request);
-                }
                 
-                if(!request.wasApproved()) {
-                    appendToPane(request.toString(), Color.GRAY);
-                } else {
-                    appendToPane(request.toString(), Color.GREEN);
-                }
             }
         }
+        executor.shutdownNow();
+        
+        appendToPane("Live SSH log monitoring shut down successfully.", Color.BLACK);
+        appendToPane("", Color.WHITE);
     }
     
     /**
-     * Test that the input source text fulfills the input Regex pattern
+     * @param executor
+     */
+    protected void backDate(ExecutorService executor) {
+       BufferedReader reader = null;
+       InputStreamReader stream = null;
+       FileInputStream fileStream = null;
+               
+       try {
+           fileStream = new FileInputStream(logFile.toString());
+           stream = new InputStreamReader(fileStream, "UTF-8");
+           reader = new BufferedReader(stream);
+           
+           String line = null;
+           
+           while((line = reader.readLine()) != null) {
+               parseLine(executor, line);
+           }
+           
+       } catch(Exception excep) {
+           // Error reporting
+           
+       } finally {
+           if(fileStream != null) IOUtils.closeQuietly(fileStream);
+           if(stream != null) IOUtils.closeQuietly(stream);
+           if(reader != null) IOUtils.closeQuietly(reader);
+       }
+    }
+    
+    /**
+     * Test that the input source text fulfils the input Regex pattern
      *
      * @param ip 
      * @return
      */
-    private boolean isInternal(String ip) {
-        Pattern ptrn = Pattern.compile("(^127\\\\.0\\\\.0\\\\.1)|(^10\\\\.)|(^172\\\\.1[6-9]\\\\.)|(^172\\\\.2[0-9]\\\\.)|(^172\\\\.3[0-1]\\\\.)|(^1‌​92\\\\.168\\\\.)");
+    protected boolean isInternal(String ip) {
+        Pattern ptrn = Pattern.compile("((10|127|(22[4-9]|23[0-9]))|(192\\.168|169\\.254)|(172\\.(1[6-9]|2[0-9]|3[0-1])))\\..*");
         Matcher mtch = ptrn.matcher(ip);
-        return mtch.find();
+        
+        boolean find = mtch.find();
+        if(find) {
+            return mtch.group().equals(ip);
+        }
+        return false;
     }
 
     /**
@@ -212,7 +233,7 @@ public class LogProcessor extends Thread {
      * @param msg
      * @param c 
      */
-    private void appendToPane(String msg, Color c) {
+    protected void appendToPane(String msg, Color c) {
         if(terminal == null) return;
         StyleContext sc = StyleContext.getDefaultStyleContext();
         AttributeSet aset = sc.addAttribute(SimpleAttributeSet.EMPTY, StyleConstants.Foreground, c);
@@ -230,7 +251,7 @@ public class LogProcessor extends Thread {
      * 
      * @return last line
      */
-    private String getLastLine() {
+    protected String getLastLine() {
         RandomAccessFile ramFile = null;
 
         try {
@@ -268,6 +289,17 @@ public class LogProcessor extends Thread {
             }
         }
     }
+    
+    /**
+     * Attempts to parse the last line of the log file into an actual AccessAttempt object before pooling it. Include a timeout
+     * on the parsing logic in case it takes ages for a IP location to be found.
+     * 
+     * @param executor executor service
+     * @param line
+     * 
+     * @throws Exception
+     */
+    protected abstract void parseLine(ExecutorService executor, String line) throws Exception;
     
 }
 // End of class
