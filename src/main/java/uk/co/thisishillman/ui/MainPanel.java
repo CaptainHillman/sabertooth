@@ -23,6 +23,8 @@
  */
 package uk.co.thisishillman.ui;
 
+import uk.co.thisishillman.vis.PieChart;
+import uk.co.thisishillman.vis.Map;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import javax.swing.JComboBox;
@@ -47,7 +49,7 @@ public class MainPanel extends javax.swing.JPanel {
     private OpenSSHProcessor processor;
     
     //
-    private MapPanel mapPanel;
+    private Map mapPanel;
     
     //
     private final JComboBox<TileSource> tileBox;
@@ -84,21 +86,21 @@ public class MainPanel extends javax.swing.JPanel {
      * @param processor 
      */
     public void startMonitoring(OpenSSHProcessor processor) {
-        this.mapPanel = new MapPanel(scaleLabel, tileBox);
-        
-        this.processor = processor;
-        this.processor.setTextDestination(terminal);
-        this.processor.addMapPanel(mapPanel);
-        
-        this.centerPanel.removeAll();
-        this.centerPanel.add(mapPanel, BorderLayout.CENTER);
-        this.centerPanel.revalidate();
-        this.centerPanel.repaint();
-        
-        this.terminal.setText("");
-        appendToPane("Beginning live SSH log monitoring...", Color.BLACK);
-        
-        this.processor.start();
+//        this.mapPanel = new Map(scaleLabel, tileBox);
+//        
+//        this.processor = processor;
+//        this.processor.setTextDestination(terminal);
+//        this.processor.addMapPanel(mapPanel);
+//        
+//        this.centerPanel.removeAll();
+//        this.centerPanel.add(mapPanel, BorderLayout.CENTER);
+//        this.centerPanel.revalidate();
+//        this.centerPanel.repaint();
+//        
+//        this.terminal.setText("");
+//        appendToPane("Beginning live SSH log monitoring...", Color.BLACK);
+//        
+//        this.processor.start();
     }
     
     /**
@@ -109,41 +111,41 @@ public class MainPanel extends javax.swing.JPanel {
      * @param showPie
      */
     public void updateUI(boolean showTerminal, boolean showSettings, boolean showMap, boolean showPie) {
-        removeAll();
-        
-        if(showPie) {
-            add(new PieChartPanel(processor.getAttempts()), BorderLayout.CENTER);
-            
-            if(showTerminal) add(scrollPane, BorderLayout.SOUTH);
-            
-            revalidate();
-            repaint();
-            return;
-        } 
-        
-        if(showMap) {
-            add(centerPanel, BorderLayout.CENTER);
-            if(showTerminal) {
-                add(scrollPane, BorderLayout.SOUTH);
-            }
-            
-        } else if(showTerminal && !showMap) {
-            add(scrollPane, BorderLayout.CENTER);
-            
-        } else if(!showTerminal && !showMap) {
-            add(noMapLabel, BorderLayout.CENTER);
-        }
-        
-        if(showSettings) {
-            add(settingsPanel, BorderLayout.WEST);
-        }
-        
-        if(!showTerminal && ! showSettings && !showMap) {
-            add(emptyLabel, BorderLayout.CENTER);
-        }
-        
-        revalidate();
-        repaint();
+//        removeAll();
+//        
+//        if(showPie) {
+//            add(new PieChart(processor.getAttempts()), BorderLayout.CENTER);
+//            
+//            if(showTerminal) add(scrollPane, BorderLayout.SOUTH);
+//            
+//            revalidate();
+//            repaint();
+//            return;
+//        } 
+//        
+//        if(showMap) {
+//            add(centerPanel, BorderLayout.CENTER);
+//            if(showTerminal) {
+//                add(scrollPane, BorderLayout.SOUTH);
+//            }
+//            
+//        } else if(showTerminal && !showMap) {
+//            add(scrollPane, BorderLayout.CENTER);
+//            
+//        } else if(!showTerminal && !showMap) {
+//            add(noMapLabel, BorderLayout.CENTER);
+//        }
+//        
+//        if(showSettings) {
+//            add(settingsPanel, BorderLayout.WEST);
+//        }
+//        
+//        if(!showTerminal && ! showSettings && !showMap) {
+//            add(emptyLabel, BorderLayout.CENTER);
+//        }
+//        
+//        revalidate();
+//        repaint();
     }
     
     /**

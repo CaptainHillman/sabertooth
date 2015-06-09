@@ -23,11 +23,13 @@
  */
 package uk.co.thisishillman.ui;
 
+import uk.co.thisishillman.ui.utils.LinkListener;
 import javax.swing.JFrame;
 import uk.co.thisishillman.Main;
 
 /**
- *
+ * About dialog UI class
+ * 
  * @author M Hillman
  */
 public class AboutDialog extends javax.swing.JDialog {
@@ -39,11 +41,12 @@ public class AboutDialog extends javax.swing.JDialog {
      */
     public AboutDialog(JFrame parent) {
         super(parent, ModalityType.APPLICATION_MODAL);
+        
+        LaFHandler.setIconImages(this);
+        LaFHandler.setNimbusTheme(this);
         initComponents();
         
         editorPane.addHyperlinkListener(new LinkListener());
-        LaFHandler.setIconImages(this);
-        LaFHandler.setNimbusTheme(this);
     }
 
     @SuppressWarnings("unchecked")
@@ -79,23 +82,23 @@ public class AboutDialog extends javax.swing.JDialog {
         versionTitle.setFont(LaFHandler.GULIM);
         versionTitle.setText("Application Version");
         versionTitle.setToolTipText(null);
-        versionTitle.setMaximumSize(new java.awt.Dimension(150, 25));
-        versionTitle.setMinimumSize(new java.awt.Dimension(150, 25));
-        versionTitle.setPreferredSize(new java.awt.Dimension(150, 25));
+        versionTitle.setMaximumSize(new java.awt.Dimension(150, 30));
+        versionTitle.setMinimumSize(new java.awt.Dimension(150, 30));
+        versionTitle.setPreferredSize(new java.awt.Dimension(150, 30));
 
         authorTitle.setFont(LaFHandler.GULIM);
-        authorTitle.setText("Author");
+        authorTitle.setText("Principal Author");
         authorTitle.setToolTipText(null);
-        authorTitle.setMaximumSize(new java.awt.Dimension(150, 25));
-        authorTitle.setMinimumSize(new java.awt.Dimension(150, 25));
-        authorTitle.setPreferredSize(new java.awt.Dimension(150, 25));
+        authorTitle.setMaximumSize(new java.awt.Dimension(150, 30));
+        authorTitle.setMinimumSize(new java.awt.Dimension(150, 30));
+        authorTitle.setPreferredSize(new java.awt.Dimension(150, 30));
 
         websiteTitle.setFont(LaFHandler.GULIM);
-        websiteTitle.setText("Website");
+        websiteTitle.setText("Author's Website");
         websiteTitle.setToolTipText(null);
-        websiteTitle.setMaximumSize(new java.awt.Dimension(150, 25));
-        websiteTitle.setMinimumSize(new java.awt.Dimension(150, 25));
-        websiteTitle.setPreferredSize(new java.awt.Dimension(150, 25));
+        websiteTitle.setMaximumSize(new java.awt.Dimension(150, 30));
+        websiteTitle.setMinimumSize(new java.awt.Dimension(150, 30));
+        websiteTitle.setPreferredSize(new java.awt.Dimension(150, 30));
 
         websiteTitle1.setFont(LaFHandler.GULIM);
         websiteTitle1.setForeground(new java.awt.Color(153, 153, 153));
@@ -103,9 +106,9 @@ public class AboutDialog extends javax.swing.JDialog {
         websiteTitle1.setText("3rd Party Resources");
         websiteTitle1.setToolTipText(null);
         websiteTitle1.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, new java.awt.Color(153, 153, 153)));
-        websiteTitle1.setMaximumSize(new java.awt.Dimension(150, 25));
-        websiteTitle1.setMinimumSize(new java.awt.Dimension(150, 25));
-        websiteTitle1.setPreferredSize(new java.awt.Dimension(150, 25));
+        websiteTitle1.setMaximumSize(new java.awt.Dimension(150, 30));
+        websiteTitle1.setMinimumSize(new java.awt.Dimension(150, 30));
+        websiteTitle1.setPreferredSize(new java.awt.Dimension(150, 30));
 
         editorPane.setEditable(false);
         editorPane.setBorder(null);
@@ -120,27 +123,27 @@ public class AboutDialog extends javax.swing.JDialog {
         versionLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         versionLabel.setText(Main.VERSION);
         versionLabel.setToolTipText(null);
-        versionLabel.setMaximumSize(new java.awt.Dimension(150, 25));
-        versionLabel.setMinimumSize(new java.awt.Dimension(150, 25));
-        versionLabel.setPreferredSize(new java.awt.Dimension(150, 25));
+        versionLabel.setMaximumSize(new java.awt.Dimension(150, 30));
+        versionLabel.setMinimumSize(new java.awt.Dimension(150, 30));
+        versionLabel.setPreferredSize(new java.awt.Dimension(150, 30));
 
         authorLabel.setFont(LaFHandler.GULIM);
         authorLabel.setForeground(new java.awt.Color(153, 153, 153));
         authorLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         authorLabel.setText("Michael Hillman");
         authorLabel.setToolTipText(null);
-        authorLabel.setMaximumSize(new java.awt.Dimension(150, 25));
-        authorLabel.setMinimumSize(new java.awt.Dimension(150, 25));
-        authorLabel.setPreferredSize(new java.awt.Dimension(150, 25));
+        authorLabel.setMaximumSize(new java.awt.Dimension(150, 30));
+        authorLabel.setMinimumSize(new java.awt.Dimension(150, 30));
+        authorLabel.setPreferredSize(new java.awt.Dimension(150, 30));
 
         websiteLabel.setFont(LaFHandler.GULIM);
         websiteLabel.setForeground(new java.awt.Color(153, 153, 153));
         websiteLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        websiteLabel.setText("thisishillman.co.uk/stego");
+        websiteLabel.setText("thisishillman.co.uk");
         websiteLabel.setToolTipText(null);
-        websiteLabel.setMaximumSize(new java.awt.Dimension(150, 25));
-        websiteLabel.setMinimumSize(new java.awt.Dimension(150, 25));
-        websiteLabel.setPreferredSize(new java.awt.Dimension(150, 25));
+        websiteLabel.setMaximumSize(new java.awt.Dimension(150, 30));
+        websiteLabel.setMinimumSize(new java.awt.Dimension(150, 30));
+        websiteLabel.setPreferredSize(new java.awt.Dimension(150, 30));
 
         javax.swing.GroupLayout detailsPanelLayout = new javax.swing.GroupLayout(detailsPanel);
         detailsPanel.setLayout(detailsPanelLayout);
@@ -172,25 +175,26 @@ public class AboutDialog extends javax.swing.JDialog {
                 .addGroup(detailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(versionTitle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(versionLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(18, 18, 18)
                 .addGroup(detailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(authorTitle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(authorLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(18, 18, 18)
                 .addGroup(detailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(websiteTitle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(websiteLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(15, 15, 15)
+                .addGap(25, 25, 25)
                 .addComponent(websiteTitle1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 219, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
         copyrightLabel.setFont(LaFHandler.GULIM);
         copyrightLabel.setForeground(new java.awt.Color(153, 153, 153));
         copyrightLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        copyrightLabel.setText("<html><p align=\"center\"><br>Copyright 2015 - M Hillman<br><br>Please see the MIT Licence for more information.</p></html>");
+        copyrightLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/stego_128.png"))); // NOI18N
+        copyrightLabel.setText("<html><p align=\"center\"><br><br>Copyright 2015 M Hillman - thisishillman.co.uk\n<br><br>\nPermission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n<br><br>\nThe above copyright notice and this permission notice shall be included in\nall copies or substantial portions of the Software.\n<br><br>\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN\nTHE SOFTWARE.</p></html>");
         copyrightLabel.setToolTipText(null);
         copyrightLabel.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         copyrightLabel.setMaximumSize(new java.awt.Dimension(999, 999));
@@ -205,17 +209,17 @@ public class AboutDialog extends javax.swing.JDialog {
             .addGroup(containerLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(detailsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 330, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(copyrightLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 166, Short.MAX_VALUE)
-                .addContainerGap())
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(copyrightLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         containerLayout.setVerticalGroup(
             containerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(containerLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(containerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(detailsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 278, Short.MAX_VALUE)
-                    .addComponent(copyrightLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 278, Short.MAX_VALUE))
+                    .addComponent(detailsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 438, Short.MAX_VALUE)
+                    .addComponent(copyrightLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
 

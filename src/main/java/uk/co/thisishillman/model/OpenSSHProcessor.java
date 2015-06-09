@@ -34,7 +34,7 @@ import java.util.concurrent.TimeUnit;
  * 
  * @author M Hillman
  */
-public class OpenSSHProcessor extends AbstractLogProcessor {
+public class OpenSSHProcessor extends BaseLogProcessor {
     
     /**
      * Initialise a OpenSSH specific processor with the input log file at the data source
@@ -72,7 +72,6 @@ public class OpenSSHProcessor extends AbstractLogProcessor {
             attempt.setUsername(userStr);
             
             if(!requests.contains(attempt)) {
-            
                 Future<Boolean> future = executor.submit(attempt);
 
                 if(future.get(TIME_OUT, TimeUnit.SECONDS)) {
@@ -85,6 +84,7 @@ public class OpenSSHProcessor extends AbstractLogProcessor {
                 }
             }
         }
+        
     }
     
 }

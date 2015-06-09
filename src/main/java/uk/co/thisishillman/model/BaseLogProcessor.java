@@ -35,8 +35,8 @@ import static java.nio.file.StandardWatchEventKinds.ENTRY_MODIFY;
 import java.nio.file.WatchEvent;
 import java.nio.file.WatchKey;
 import java.nio.file.WatchService;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.regex.Matcher;
@@ -49,23 +49,23 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.StyleContext;
 import org.apache.commons.io.IOUtils;
 import uk.co.thisishillman.Settings;
-import uk.co.thisishillman.ui.MapPanel;
+import uk.co.thisishillman.vis.Map;
 
 /**
- * Reads SSH logs and build AccessAttempt objects
+ * Reads SSH logs and build AccessAttempt objects, to be used as a base for sub-classes
  * 
  * @author M Hillman
  */
-public abstract class AbstractLogProcessor extends Thread {
+public class BaseLogProcessor extends Thread {
     
     // Time out on single request process
-    public static final int TIME_OUT = 100;
+    public static final int TIME_OUT = 10;
     
     // Running flag
     public static volatile boolean RUNNING;
     
     // To stop duplicates
-    protected final List<AccessAttempt> requests;
+    protected final Set<AccessAttempt> requests;
     
     // Location of log file
     protected final Path logFile;
@@ -77,16 +77,16 @@ public abstract class AbstractLogProcessor extends Thread {
     protected JTextPane terminal;
     
     // Map Panel
-    protected MapPanel mapPanel;
+    protected Map mapPanel;
     
     /**
      * Initialise a new processor with the input log file at the data source
      * 
      * @param logFile 
      */
-    public AbstractLogProcessor(Path logFile) {
+    protected BaseLogProcessor(Path logFile) {
         this.logFile = logFile;
-        this.requests = new ArrayList<>();
+        this.requests = new HashSet<>();
         
         this.setDaemon(false);
         this.setName("Log Reading Thread");
@@ -104,7 +104,7 @@ public abstract class AbstractLogProcessor extends Thread {
      * 
      * @param mapPanel
      */
-    public void addMapPanel(MapPanel mapPanel) {
+    public void addMapPanel(Map mapPanel) {
         this.mapPanel = mapPanel;
     }
     
@@ -112,7 +112,7 @@ public abstract class AbstractLogProcessor extends Thread {
      * Returns a list of SSH access attempts
      * @return 
      */
-    public List<AccessAttempt> getAttempts() {
+    public Set<AccessAttempt> getAttempts() {
         return this.requests;
     }
     
@@ -299,7 +299,9 @@ public abstract class AbstractLogProcessor extends Thread {
      * 
      * @throws Exception
      */
-    protected abstract void parseLine(ExecutorService executor, String line) throws Exception;
+    protected void parseLine(ExecutorService executor, String line) throws Exception {
+        // Override this in sub-classes!
+    }
     
 }
 // End of class

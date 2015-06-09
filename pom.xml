@@ -6,8 +6,8 @@
     
     <modelVersion>4.0.0</modelVersion>
     <groupId>uk.co.thisishillman</groupId>
-    <artifactId>tracker</artifactId>
-    <version>0.1</version>
+    <artifactId>stegosaurus</artifactId>
+    <version>1.0</version>
     <packaging>jar</packaging>
     
     <repositories>

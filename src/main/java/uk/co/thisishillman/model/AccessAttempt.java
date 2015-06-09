@@ -198,8 +198,8 @@ public class AccessAttempt implements Callable<Boolean> {
         AccessAttempt req = (AccessAttempt) obj;
         
         if( this.approved != req.wasApproved() ) return false;
-        if( !this.getTime().equals(req.getTime()) ) return false;
         if( !this.getSource().equals(req.getSource()) ) return false;
+        if( !this.getTime().equals(req.getTime()) ) return false;
         
         return true;
     }
