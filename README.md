@@ -1,5 +1,6 @@
+<img align="right" src="img_src/logo_64.png" alt="Sabertooth SSH Tracker">
 # Sabertooth
-<img align="right" hspace="5" vspace="5" src="img_src/logo_128.png" alt="Sabertooth SSH Tracker">
+
 The Sabertooth SSH monitoring tool allows users to track all incoming SSH access attempts by live
 monitoring their SSH server's log file. Originating locations for each connection are determined
 and plotted on a world-map as attempts are made. Additional breakdowns of attempts by country,
