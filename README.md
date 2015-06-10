@@ -18,13 +18,20 @@ Features include:
 > "A Saber-toothed cat, is any of various groups of predatory mammals that were characterized by long, 
 > curved saber-shaped canine teeth. The large maxillary canine teeth extended from the mouth even 
 > when it was closed." - Wikipedia
-<br />
+<br /><br />
 
-## Licence
+##### Current Release 
+___
+Public Release Version 0.1 - _[Download Here]()_
+<br /><br />
+
+##### Licence
+___
 Copyright Michael Hillman 2015 under the MIT Licence  
 _See [licence file](LICENCE) for more information_
-<br />
+<br /><br />
   
-## Branch Information
+##### Branch Information
+___
 Current Git Branches: master, develop  
 _Following [Vincent Driessen's model](http://nvie.com/posts/a-successful-git-branching-model/)_
