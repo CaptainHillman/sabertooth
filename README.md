@@ -1,15 +1,9 @@
 # Sabertooth
-<div><img align="right" src="img_src/logo_128.png" alt="Sabertooth SSH Tracker"></div>
-<br /><br /><br />
-
+<img align="right" hspace="5" vspace="5" src="img_src/logo_128.png" alt="Sabertooth SSH Tracker">
 The Sabertooth SSH monitoring tool allows users to track all incoming SSH access attempts by live
 monitoring their SSH server's log file. Originating locations for each connection are determined
 and plotted on a world-map as attempts are made. Additional breakdowns of attempts by country,
 time, and username are also available.
-
-> "A Saber-toothed cat, is any of various groups of predatory mammals that were characterized by long, 
-> curved saber-shaped canine teeth. The large maxillary canine teeth extended from the mouth even 
-> when it was closed." - Wikipedia
 
 Features include:
 * Support for OpenSSH
@@ -19,6 +13,10 @@ Features include:
 ..* Country
 ..* Time
 ..* Username
+
+> "A Saber-toothed cat, is any of various groups of predatory mammals that were characterized by long, 
+> curved saber-shaped canine teeth. The large maxillary canine teeth extended from the mouth even 
+> when it was closed." - Wikipedia
 <br />
 
 ## Licence
