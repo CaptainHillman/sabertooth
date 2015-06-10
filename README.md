@@ -1,9 +1,6 @@
-Sabertooth
-===
-Sabertooth - SSH Monitoring Tool
+# Sabertooth
 
-
-###### Project Information
+<div style="align:center"><img src ="img_src/logo_64.png" /></div>
 
 The Sabertooth SSH monitoring tool allows users to track all incoming SSH access attempts by live
 monitoring their SSH server's log file. Originating locations for each connection are determined
@@ -22,17 +19,13 @@ Features include:
 ..* Country
 ..* Time
 ..* Username
+<br />
 
-
-###### Author
-Michael Hillman (thisishillman.co.uk)
-
-
-###### Licence
-Copyright Michael Hillman 2015 under the MIT Licence
+## Licence
+Copyright Michael Hillman 2015 under the MIT Licence  
 _See [licence file](LICENCE) for more information_
-
-###### Branch Information
-Current branches: master, develop
-
+<br />
+  
+## Branch Information
+Current Git Branches: master, develop  
 _Following [Vincent Driessen's model](http://nvie.com/posts/a-successful-git-branching-model/)_
