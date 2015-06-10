@@ -153,11 +153,8 @@ public class LogDialog extends javax.swing.JDialog {
         });
 
         browseLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        browseLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/folder.png"))); // NOI18N
+        browseLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/search.png"))); // NOI18N
         browseLabel.setToolTipText("Browse to your SSH log file");
-        browseLabel.setMaximumSize(new java.awt.Dimension(30, 30));
-        browseLabel.setMinimumSize(new java.awt.Dimension(30, 30));
-        browseLabel.setPreferredSize(new java.awt.Dimension(30, 30));
         browseLabel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 browseLabelMouseClicked(evt);
@@ -225,7 +222,7 @@ public class LogDialog extends javax.swing.JDialog {
                         .addGap(10, 10, 10)
                         .addComponent(logFileField, javax.swing.GroupLayout.DEFAULT_SIZE, 226, Short.MAX_VALUE)
                         .addGap(10, 10, 10)
-                        .addComponent(browseLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(browseLabel))
                     .addGroup(subContainerLayout.createSequentialGroup()
                         .addComponent(serverTypeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(10, 10, 10)
@@ -249,10 +246,11 @@ public class LogDialog extends javax.swing.JDialog {
                     .addComponent(serverTypeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(serverTypeBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addGroup(subContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(logFileLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(logFileField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(browseLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(subContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(browseLabel, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(subContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(logFileLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(logFileField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(18, 18, 18)
                 .addGroup(subContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(checkBoxLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -315,11 +313,11 @@ public class LogDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_browseLabelMouseClicked
 
     private void browseLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_browseLabelMouseEntered
-        browseLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/folder_hover.png")));
+        browseLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/search_hover.png")));
     }//GEN-LAST:event_browseLabelMouseEntered
 
     private void browseLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_browseLabelMouseExited
-        browseLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/folder.png"))); 
+        browseLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/search.png"))); 
     }//GEN-LAST:event_browseLabelMouseExited
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

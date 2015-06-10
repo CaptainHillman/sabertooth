@@ -113,9 +113,7 @@ public class MainFrame extends JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle(Main.PRODUCT_NAME);
-        setMaximumSize(new java.awt.Dimension(9999, 9999));
         setMinimumSize(new java.awt.Dimension(800, 600));
-        setPreferredSize(new java.awt.Dimension(800, 600));
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
                 formWindowClosing(evt);
@@ -125,7 +123,13 @@ public class MainFrame extends JFrame {
         mainContainer.setBackground(new java.awt.Color(255, 255, 255));
         mainContainer.setLayout(new java.awt.BorderLayout());
 
+        welcomeLabel.setFont(LaFHandler.GULIM);
+        welcomeLabel.setForeground(new java.awt.Color(100, 100, 100));
+        welcomeLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        welcomeLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/logo_512.png"))); // NOI18N
         welcomeLabel.setText("welcome!");
+        welcomeLabel.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        welcomeLabel.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         mainContainer.add(welcomeLabel, java.awt.BorderLayout.CENTER);
 
         getContentPane().add(mainContainer, java.awt.BorderLayout.CENTER);
